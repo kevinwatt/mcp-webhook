@@ -37,19 +37,24 @@ class WebhookServer {
     this.server = new Server(
       {
         name: 'webhook-mcp',
-        version: '0.1.0',
+        version: '0.1.2',
       },
       {
         capabilities: {
-          tools: {},
+          tools: {
+            alwaysAllow: ['send_message']
+          },
         },
       }
     );
 
     this.setupToolHandlers();
     
-    // 錯誤處理
-    this.server.onerror = (error) => console.error('[MCP Error]', error);
+    // 加強錯誤處理
+    this.server.onerror = (error) => {
+      console.error('[MCP Server Error]', error);
+      process.exit(1);  // 遇到嚴重錯誤時結束程序
+    };
     process.on('SIGINT', async () => {
       await this.server.close();
       process.exit(0);
@@ -134,9 +139,15 @@ class WebhookServer {
   }
 
   async run() {
-    const transport = new StdioServerTransport();
-    await this.server.connect(transport);
-    console.error('Webhook MCP server running on stdio');
+    try {
+      const transport = new StdioServerTransport();
+      await this.server.connect(transport);
+      console.error('[MCP Server] Webhook server running on stdio');
+      console.error('[MCP Server] Webhook URL:', this.webhookUrl);
+    } catch (error) {
+      console.error('[MCP Server] Failed to start:', error);
+      process.exit(1);
+    }
   }
 }
 
