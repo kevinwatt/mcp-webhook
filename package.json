@@ -5,7 +5,7 @@
   "type": "module",
   "main": "build/index.js",
   "bin": {
-    "mcp-server-webhook": "./build/index.js"
+    "mcp-webhook": "./build/index.js"
   },
   "scripts": {
     "build": "tsc && node --input-type=module -e \"import { chmod } from 'fs'; chmod('build/index.js', '755', () => {});\"",
@@ -34,10 +34,6 @@
     "CHANGELOG.md",
     "LICENSE"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kevinwatt/mcp-webhook.git"
