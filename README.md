@@ -1,9 +1,19 @@
 # MCP Webhook Server
+[![smithery badge](https://smithery.ai/badge/@kevinwatt/mcp-webhook)](https://smithery.ai/server/@kevinwatt/mcp-webhook)
 
 An MCP server for posting messages to webhooks.
 
 ## Installation
 
+### Installing via Smithery
+
+To install MCP Webhook Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@kevinwatt/mcp-webhook):
+
+```bash
+npx -y @smithery/cli install @kevinwatt/mcp-webhook --client claude
+```
+
+### Manual Installation
 ```bash
 npm install @kevinwatt/mcp-webhook
 ```
