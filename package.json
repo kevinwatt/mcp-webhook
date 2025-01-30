@@ -1,0 +1,49 @@
+{
+  "name": "@kevinwatt/mcp-webhook",
+  "version": "0.1.0",
+  "description": "Generic Webhook MCP Server",
+  "type": "module",
+  "main": "build/index.js",
+  "bin": {
+    "mcp-server-webhook": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc && node --input-type=module -e \"import { chmod } from 'fs'; chmod('build/index.js', '755', () => {});\"",
+    "watch": "tsc -w",
+    "start": "node build/index.js",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "discord",
+    "webhook"
+  ],
+  "author": "genm",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.4.1",
+    "axios": "^1.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
+  },
+  "files": [
+    "build",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinwatt/mcp-webhook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kevinwatt/mcp-webhook/issues"
+  },
+  "homepage": "https://github.com/kevinwatt/mcp-webhook#readme"
+}
