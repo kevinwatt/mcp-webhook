@@ -2,6 +2,8 @@
 
 An MCP server for posting messages to webhooks.
 
+<a href="https://glama.ai/mcp/servers/ijmd1ia5zg"><img width="380" height="200" src="https://glama.ai/mcp/servers/ijmd1ia5zg/badge" alt="Webhook Server MCP server" /></a>
+
 ## Installation
 
 ```bash
