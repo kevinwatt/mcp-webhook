@@ -37,7 +37,7 @@ class WebhookServer {
     this.server = new Server(
       {
         name: 'webhook-mcp',
-        version: '0.1.2',
+        version: '0.1.6',
       },
       {
         capabilities: {

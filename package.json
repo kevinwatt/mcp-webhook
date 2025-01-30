@@ -22,10 +22,12 @@
   },
   "keywords": [
     "mcp",
-    "discord",
-    "webhook"
+    "webhook",
+    "chat",
+    "mattermost",
+    "automation"
   ],
-  "author": "genm",
+  "author": "kevinwatt",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.4.1",
