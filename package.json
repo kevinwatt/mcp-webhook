@@ -5,7 +5,14 @@
   "type": "module",
   "main": "build/index.js",
   "bin": {
-    "mcp-webhook": "./build/index.js"
+    "mcp-webhook": "build/index.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./build/index.js",
+      "require": "./build/index.js"
+    },
+    "./cli": "./build/index.js"
   },
   "scripts": {
     "build": "tsc && node --input-type=module -e \"import { chmod } from 'fs'; chmod('build/index.js', '755', () => {});\"",

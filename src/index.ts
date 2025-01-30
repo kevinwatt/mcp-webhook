@@ -100,13 +100,26 @@ class WebhookServer {
       if (!isValidSendMessageArgs(request.params.arguments)) {
         throw new McpError(
           ErrorCode.InvalidParams,
-          'send_message 的參數無效'
+          '必須提供 content 參數'
         );
+      }
+
+      // 檢查 content 是否為空
+      if (!request.params.arguments.content.trim()) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: '錯誤: 訊息內容不能為空',
+            },
+          ],
+          isError: true,
+        };
       }
 
       try {
         await axios.post(this.webhookUrl, {
-          content: request.params.arguments.content,
+          text: request.params.arguments.content,
           username: request.params.arguments.username,
           avatar_url: request.params.arguments.avatar_url,
         });
@@ -121,13 +134,16 @@ class WebhookServer {
         };
       } catch (error) {
         if (axios.isAxiosError(error)) {
+          const errorMessage = error.response?.data?.message || error.message;
+          console.error('[Webhook Error]', {
+            response: error.response?.data,
+            status: error.response?.status
+          });
           return {
             content: [
               {
                 type: 'text',
-                text: `Webhook 錯誤: ${
-                  error.response?.data?.message ?? error.message
-                }`,
+                text: `Webhook 錯誤: ${errorMessage}`,
               },
             ],
             isError: true,
