@@ -66,21 +66,21 @@ class WebhookServer {
       tools: [
         {
           name: 'send_message',
-          description: '發送訊息到webhook端點',
+          description: 'Send message to webhook endpoint',
           inputSchema: {
             type: 'object',
             properties: {
               content: {
                 type: 'string',
-                description: '要發送的訊息內容',
+                description: 'Message content to send',
               },
               username: {
                 type: 'string',
-                description: '顯示名稱（選填）',
+                description: 'Display name (optional)',
               },
               avatar_url: {
                 type: 'string', 
-                description: '頭像URL（選填）',
+                description: 'Avatar URL (optional)',
               }
             },
             required: ['content'],
@@ -93,24 +93,23 @@ class WebhookServer {
       if (request.params.name !== 'send_message') {
         throw new McpError(
           ErrorCode.MethodNotFound,
-          `未知的工具: ${request.params.name}`
+          `Unknown tool: ${request.params.name}`
         );
       }
 
       if (!isValidSendMessageArgs(request.params.arguments)) {
         throw new McpError(
           ErrorCode.InvalidParams,
-          '必須提供 content 參數'
+          'Content parameter is required'
         );
       }
 
-      // 檢查 content 是否為空
       if (!request.params.arguments.content.trim()) {
         return {
           content: [
             {
               type: 'text',
-              text: '錯誤: 訊息內容不能為空',
+              text: 'Error: Message content cannot be empty',
             },
           ],
           isError: true,
@@ -128,7 +127,7 @@ class WebhookServer {
           content: [
             {
               type: 'text',
-              text: '訊息已發送成功',
+              text: 'Message sent successfully',
             },
           ],
         };
@@ -143,7 +142,7 @@ class WebhookServer {
             content: [
               {
                 type: 'text',
-                text: `Webhook 錯誤: ${errorMessage}`,
+                text: `Webhook error: ${errorMessage}`,
               },
             ],
             isError: true,
@@ -159,7 +158,6 @@ class WebhookServer {
       const transport = new StdioServerTransport();
       await this.server.connect(transport);
       console.error('[MCP Server] Webhook server running on stdio');
-      console.error('[MCP Server] Webhook URL:', this.webhookUrl);
     } catch (error) {
       console.error('[MCP Server] Failed to start:', error);
       process.exit(1);
