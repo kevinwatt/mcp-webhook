@@ -8,9 +8,10 @@ An MCP server for posting messages to webhooks.
 npm install @kevinwatt/mcp-webhook
 ```
 
-## Configuration
+## Configuration with [Dive Desktop](https://github.com/OpenAgentPlatform/Dive)
 
-Add the following to your MCP configuration file:
+1. Click "+ Add MCP Server" in Dive Desktop
+2. Copy and paste this configuration:
 
 ```json
 {
@@ -31,6 +32,7 @@ Add the following to your MCP configuration file:
   }
 }
 ```
+3. Click "Save" to install the MCP server
 
 ## Features
 
