@@ -1,6 +1,13 @@
 # MCP Webhook Server
 
-An MCP server for posting messages to webhooks.
+An MCP server implementation that integrates with webhooks, providing message sending capabilities.
+
+## Features
+
+* **Generic Webhook Support**: Send messages to any webhook endpoint
+* **Custom Username**: Set custom display name for messages
+* **Avatar Support**: Customize message avatar
+* **MCP Integration**: Works with Dive and other MCP-compatible LLMs
 
 ## Installation
 
@@ -32,43 +39,38 @@ npm install @kevinwatt/mcp-webhook
   }
 }
 ```
+
 3. Click "Save" to install the MCP server
 
-## Features
+## Tool Documentation
 
-### send_message
+* **send_message**
+  * Send message to webhook endpoint
+  * Inputs:
+    * `content` (string, required): Message content to send
+    * `username` (string, optional): Display name
+    * `avatar_url` (string, optional): Avatar URL
 
-Sends a message to webhook endpoint.
+## Usage Examples
 
-Parameters:
-- `content`: Message content (required)
-- `username`: Display name (optional)
-- `avatar_url`: Avatar URL (optional)
-
-Example:
-```typescript
-<use_mcp_tool>
-<server_name>webhook</server_name>
-<tool_name>send_message</tool_name>
-<arguments>
-{
-  "content": "Test message",
-  "username": "Custom Name"
-}
-</arguments>
-</use_mcp_tool>
+Ask your LLM to:
+```
+"Send a message to webhook: Hello World!"
+"Send a message with custom name: content='Testing', username='Bot'"
 ```
 
-## Development
+## Manual Start
 
-This project uses GitHub Actions for continuous integration and automated publishing to npm. When you push a new version tag (e.g., `v1.0.0`), it will automatically:
+If needed, start the server manually:
 
-1. Build the package
-2. Run tests
-3. Publish to npm
-4. Create a GitHub release
+```bash
+npx @kevinwatt/mcp-webhook
+```
 
-For more details about the release process, see [CHANGELOG.md](./CHANGELOG.md).
+## Requirements
+
+* Node.js 18+
+* MCP-compatible LLM service
 
 ## License
 
@@ -77,3 +79,12 @@ MIT
 ## Author
 
 kevinwatt
+
+## Keywords
+
+* mcp
+* webhook
+* chat
+* dive
+* llm
+* automation
