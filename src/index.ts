@@ -8,11 +8,26 @@ import {
   McpError,
 } from '@modelcontextprotocol/sdk/types.js';
 import axios from 'axios';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// Helper to get __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Read package.json
+const packageJsonPath = join(__dirname, '..', 'package.json');
+const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
 
 interface SendMessageArgs {
   content: string;
   username?: string;
   avatar_url?: string;
+}
+
+interface SendJsonArgs {
+  body: object;
 }
 
 const isValidSendMessageArgs = (args: unknown): args is SendMessageArgs => {
@@ -21,6 +36,14 @@ const isValidSendMessageArgs = (args: unknown): args is SendMessageArgs => {
   }
   const { content } = args as Record<string, unknown>;
   return typeof content === 'string';
+};
+
+const isValidSendJsonArgs = (args: unknown): args is SendJsonArgs => {
+  if (typeof args !== 'object' || args === null) {
+    return false;
+  }
+  const { body } = args as Record<string, unknown>;
+  return typeof body === 'object' && body !== null;
 };
 
 class WebhookServer {
@@ -36,13 +59,13 @@ class WebhookServer {
 
     this.server = new Server(
       {
-        name: 'webhook-mcp',
-        version: '0.1.11',
+        name: pkg.name,
+        version: pkg.version,
       },
       {
         capabilities: {
           tools: {
-            alwaysAllow: ['send_message']
+            alwaysAllow: ['send_message', 'send_json']
           },
         },
       }
@@ -86,69 +109,122 @@ class WebhookServer {
             required: ['content'],
           },
         },
+        {
+          name: 'send_json',
+          description: 'Send arbitrary JSON object to webhook endpoint',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              body: {
+                type: 'object',
+                description: 'JSON object to send as the POST body',
+                additionalProperties: true
+              },
+            },
+            required: ['body'],
+          },
+        },
       ],
     }));
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      if (request.params.name !== 'send_message') {
-        throw new McpError(
-          ErrorCode.MethodNotFound,
-          `Unknown tool: ${request.params.name}`
-        );
-      }
+      if (request.params.name === 'send_message') {
+        if (!isValidSendMessageArgs(request.params.arguments)) {
+          throw new McpError(
+            ErrorCode.InvalidParams,
+            'Content parameter is required'
+          );
+        }
 
-      if (!isValidSendMessageArgs(request.params.arguments)) {
-        throw new McpError(
-          ErrorCode.InvalidParams,
-          'Content parameter is required'
-        );
-      }
-
-      if (!request.params.arguments.content.trim()) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: 'Error: Message content cannot be empty',
-            },
-          ],
-          isError: true,
-        };
-      }
-
-      try {
-        await axios.post(this.webhookUrl, {
-          text: request.params.arguments.content,
-          username: request.params.arguments.username,
-          avatar_url: request.params.arguments.avatar_url,
-        });
-
-        return {
-          content: [
-            {
-              type: 'text',
-              text: 'Message sent successfully',
-            },
-          ],
-        };
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          const errorMessage = error.response?.data?.message || error.message;
-          console.error('[Webhook Error]', {
-            response: error.response?.data,
-            status: error.response?.status
-          });
+        if (!request.params.arguments.content.trim()) {
           return {
             content: [
               {
                 type: 'text',
-                text: `Webhook error: ${errorMessage}`,
+                text: 'Error: Message content cannot be empty',
               },
             ],
             isError: true,
           };
         }
-        throw error;
+
+        try {
+          await axios.post(this.webhookUrl, {
+            text: request.params.arguments.content,
+            username: request.params.arguments.username,
+            avatar_url: request.params.arguments.avatar_url,
+          });
+
+          return {
+            content: [
+              {
+                type: 'text',
+                text: 'Message sent successfully',
+              },
+            ],
+          };
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            const errorMessage = error.response?.data?.message || error.message;
+            console.error('[Webhook Error]', {
+              response: error.response?.data,
+              status: error.response?.status
+            });
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: `Webhook error: ${errorMessage}`,
+                },
+              ],
+              isError: true,
+            };
+          }
+          throw error;
+        }
+      } else if (request.params.name === 'send_json') {
+        if (!isValidSendJsonArgs(request.params.arguments)) {
+          throw new McpError(
+            ErrorCode.InvalidParams,
+            'Body parameter is required and must be an object'
+          );
+        }
+        
+        try {
+          await axios.post(this.webhookUrl, request.params.arguments.body);
+          
+          return {
+            content: [
+              {
+                type: 'text',
+                text: 'JSON sent successfully',
+              },
+            ],
+          };
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            const errorMessage = error.response?.data?.message || error.message;
+            console.error('[Webhook Error]', {
+              response: error.response?.data,
+              status: error.response?.status
+            });
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: `Webhook error: ${errorMessage}`,
+                },
+              ],
+              isError: true,
+            };
+          }
+          throw error;
+        }
+      } else {
+        throw new McpError(
+          ErrorCode.MethodNotFound,
+          `Unknown tool: ${request.params.name}`
+        );
       }
     });
   }

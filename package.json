@@ -1,6 +1,6 @@
 {
   "name": "@kevinwatt/mcp-webhook",
-  "version": "0.1.11",
+  "version": "0.2.2",
   "description": "Generic Webhook MCP Server",
   "type": "module",
   "main": "build/index.js",
