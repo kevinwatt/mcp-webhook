@@ -10,6 +10,8 @@ An MCP server implementation that integrates with webhooks, providing message se
 * **Avatar Support**: Customize message avatar
 * **MCP Integration**: Works with Dive and other MCP-compatible LLMs
 
+<a href="https://glama.ai/mcp/servers/ijmd1ia5zg"><img width="380" height="200" src="https://glama.ai/mcp/servers/ijmd1ia5zg/badge" alt="Webhook Server MCP server" /></a>
+
 ## Installation
 
 ### Installing via Smithery
