@@ -8,6 +8,17 @@ import {
   McpError,
 } from '@modelcontextprotocol/sdk/types.js';
 import axios from 'axios';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// Helper to get __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Read package.json
+const packageJsonPath = join(__dirname, '..', 'package.json');
+const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
 
 interface SendMessageArgs {
   content: string;
@@ -48,8 +59,8 @@ class WebhookServer {
 
     this.server = new Server(
       {
-        name: 'webhook-mcp',
-        version: '0.1.11',
+        name: pkg.name,
+        version: pkg.version,
       },
       {
         capabilities: {
