@@ -11,6 +11,7 @@ import axios from 'axios';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { isValidSendMessageArgs, isValidSendJsonArgs, SendMessageArgs, SendJsonArgs } from './utils/validators.js';
 
 // Helper to get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -19,32 +20,6 @@ const __dirname = dirname(__filename);
 // Read package.json
 const packageJsonPath = join(__dirname, '..', 'package.json');
 const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-
-interface SendMessageArgs {
-  content: string;
-  username?: string;
-  avatar_url?: string;
-}
-
-interface SendJsonArgs {
-  body: object;
-}
-
-const isValidSendMessageArgs = (args: unknown): args is SendMessageArgs => {
-  if (typeof args !== 'object' || args === null) {
-    return false;
-  }
-  const { content } = args as Record<string, unknown>;
-  return typeof content === 'string';
-};
-
-const isValidSendJsonArgs = (args: unknown): args is SendJsonArgs => {
-  if (typeof args !== 'object' || args === null) {
-    return false;
-  }
-  const { body } = args as Record<string, unknown>;
-  return typeof body === 'object' && body !== null;
-};
 
 class WebhookServer {
   private server: Server;
