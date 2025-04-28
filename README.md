@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/mseep-audited.png)](https://mseep.ai/app/kevinwatt-mcp-webhook)
+
 # MCP Webhook Server
 [![smithery badge](https://smithery.ai/badge/@kevinwatt/mcp-webhook)](https://smithery.ai/server/@kevinwatt/mcp-webhook)
 
