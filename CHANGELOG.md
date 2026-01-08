@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.3] - 2026-01-08
+
+### Security
+- Upgrade @modelcontextprotocol/sdk to ^1.25.2 (fix DNS rebinding & ReDoS vulnerabilities)
+- Upgrade axios to ^1.13.2 (fix DoS & SSRF vulnerabilities)
+
+### Added
+- WEBHOOK_URL format and protocol validation
+- HTTP request timeout (30 seconds)
+- Error handling for package.json reading
+
+### Changed
+- Refactor tool handlers into separate methods
+- Extract shared error handling into handleWebhookError()
+- Revamp README with better documentation and multi-client setup guides
+
 ## [0.2.2] - 2025-04-11
 
 ### Added

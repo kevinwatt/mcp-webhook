@@ -1,23 +1,23 @@
 {
   "name": "@kevinwatt/mcp-webhook",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Generic Webhook MCP Server",
   "type": "module",
-  "main": "build/index.js",
+  "main": "build/src/index.js",
   "bin": {
-    "mcp-webhook": "build/index.js"
+    "mcp-webhook": "build/src/index.js"
   },
   "exports": {
     ".": {
-      "import": "./build/index.js",
-      "require": "./build/index.js"
+      "import": "./build/src/index.js",
+      "require": "./build/src/index.js"
     },
-    "./cli": "./build/index.js"
+    "./cli": "./build/src/index.js"
   },
   "scripts": {
-    "build": "tsc && node --input-type=module -e \"import { chmod } from 'fs'; chmod('build/index.js', '755', () => {});\"",
+    "build": "tsc && node --input-type=module -e \"import { chmod } from 'fs'; chmod('build/src/index.js', '755', () => {});\"",
     "watch": "tsc -w",
-    "start": "node build/index.js",
+    "start": "node build/src/index.js",
     "prepare": "npm run build",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
   },
